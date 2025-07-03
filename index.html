@@ -113,7 +113,13 @@
             min-width: 80px;
         }
         
-        .check-col {
+        .check-colo {
+            width: 20%;
+            min-width: 60px;
+            max-width: 80px
+        }
+
+        .check-colx {
             width: 20%;
             min-width: 60px;
             max-width: 80px
@@ -217,16 +223,16 @@
                 <colgroup>
                     <col class="number-col">
                     <col class="name-col">
-                    <col class="check-col">
-                    <col class="check-col">
+                    <col class="check-colo">
+                    <col class="check-colx">
                 </colgroup>
                                 
                 <thead>
                     <tr>
                         <th class="number-col">번호</th>
                         <th class="name-col">이름</th>
-                        <th class="check-col o-header">체크 ✓</th>
-                        <th class="check-col x-header">선택안함 ✗</th>
+                        <th class="check-colo o-header">체크 ✓</th>
+                        <th class="check-colx x-header">선택안함 ✗</th>
                     </tr>
                 </thead>
                 <tbody id="grade3">
@@ -236,6 +242,7 @@
                         <td class="checkbox-container o-col">
                             <input type="checkbox" data-grade="3" data-type="o">
                         </td>
+                        
                         <td class="checkbox-container x-col">
                             <input type="checkbox" data-grade="3" data-type="x">
                         </td>
