@@ -92,15 +92,17 @@
             justify-content: center;
             align-items: center;
             min-height: 30px;
+            box-sizing: border-box;
         }
         
         input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+            width: 15px;
+            height: 15px;
             cursor: pointer;
             margin: 0;
+            display: block;
         }
-        
+    
         .number-col {
             width: 15%;
             min-width: 40px;
@@ -113,7 +115,8 @@
         
         .check-col {
             width: 20%;
-            min-width: 20px;
+            min-width: 60px;
+            max-width: 80px
         }
         
         /* O 컬럼 스타일 */
@@ -211,6 +214,13 @@
         <div class="grade-section">
             <div class="grade-header">3학년</div>
             <table class="attendance-table">
+                <colgroup>
+                    <col class="number-col">
+                    <col class="name-col">
+                    <col class="check-col">
+                    <col class="check-col">
+                </colgroup>
+                                
                 <thead>
                     <tr>
                         <th class="number-col">번호</th>
