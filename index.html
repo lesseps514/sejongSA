@@ -1,109 +1,119 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>체크박스 표</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
-  table {
-    border-collapse: collapse;
-    width: 400px;
-  }
-  th, td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: center;
-  }
-  th {
-    background-color: #eee;
-  }
-  button {
-    margin-top: 10px;
-    padding: 6px 12px;
-    font-size: 14px;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>출석 체크</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; max-width: 900px; }
+    th, td { border: 1px solid #999; padding: 6px; text-align: center; }
+    th { background: #dbe8f4; }
+    button { margin-top: 15px; padding: 8px 16px; }
+  </style>
 </head>
 <body>
 
-<h3>체크박스 표</h3>
+<h2>출석 체크리스트</h2>
+
 <table>
   <thead>
     <tr>
-      <th>요일</th>
-      <th>체크</th>
+      <th colspan="3">3학년</th>
+      <th colspan="3">2학년</th>
+      <th colspan="3">1학년</th>
+    </tr>
+    <tr>
+      <th>번호</th><th>이름</th><th>O / X</th>
+      <th>번호</th><th>이름</th><th>O / X</th>
+      <th>번호</th><th>이름</th><th>O / X</th>
     </tr>
   </thead>
-  <tbody>
-    <tr><td>월요일</td><td><input type="checkbox" id="mon" /></td></tr>
-    <tr><td>화요일</td><td><input type="checkbox" id="tue" /></td></tr>
-    <tr><td>수요일</td><td><input type="checkbox" id="wed" /></td></tr>
-    <tr><td>목요일</td><td><input type="checkbox" id="thu" /></td></tr>
-    <tr><td>금요일</td><td><input type="checkbox" id="fri" /></td></tr>
-    <tr><td>토요일</td><td><input type="checkbox" id="sat" /></td></tr>
-    <tr><td>일요일</td><td><input type="checkbox" id="sun" /></td></tr>
+  <tbody id="checklist-body">
+    <!-- 자바스크립트로 동적 생성 -->
   </tbody>
 </table>
 
-<button id="resetBtn">전체 초기화</button>
+<button onclick="resetAll()">전체 초기화</button>
 
 <script>
-  // 체크박스 id 배열
-  const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+const data = {
+  grade3: [
+    [19,"신다현"],[0,"이예성"],[1,"양호정"],[4,"최 현"],[5,"양대웅"],[6,"구운우"],[7,"김민승"],
+    [8,"김승현"],[9,"김예환"],[10,"양시원"],[12,"하종훈"],[13,"신이환"],[14,"유 신"],[16,"박건우"],[17,"유시언"],[18,"이준혁"]
+  ],
+  grade2: [
+    [20,"임창민"],[21,"정현빈"],[22,"조현준"],[23,"송하랑"],[24,"김은호"],[25,"고대원"],[26,"이승원"],[27,"정윤우"],
+    [28,"김도율"],[29,"김호주"],[30,"박하율"],[31,"지현우"],[32,"김호준"],[33,"백인준"],[34,"김민제"],
+    [35,"최민준"],[36,"최서준"],[88,"이민준"]
+  ],
+  grade1: [
+    [37,"장라온"],[38,"손주호"],[39,"이주호"],[40,"문명민"],[41,"이선우"],[42,"박세일"],[43,"서호준"],[45,"백석현"],
+    [46,"오태권"],[47,"이도율"],[48,"안 룰"],[49,"백승준"],[50,"최승완"],[51,"이원준"],[52,"임준"],
+    [53,"김재현"],[55,"허준혁"],[56,"홍현택"],[59,"이영재"]
+  ]
+};
 
-  // 로컬스토리지 키 이름
-  const storageKey = 'checkboxStatus';
+// 체크박스 상태 저장
+function saveStatus() {
+  const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+  const status = {};
+  allCheckboxes.forEach(cb => status[cb.id] = cb.checked);
+  localStorage.setItem("attendanceStatus", JSON.stringify(status));
+}
 
-  // 체크박스 상태 저장
-  function saveStatus() {
-    const status = {};
-    days.forEach(day => {
-      const checkbox = document.getElementById(day);
-      status[day] = checkbox.checked;
+// 상태 불러오기
+function loadStatus() {
+  const saved = localStorage.getItem("attendanceStatus");
+  if (saved) {
+    const status = JSON.parse(saved);
+    Object.keys(status).forEach(id => {
+      const cb = document.getElementById(id);
+      if (cb) cb.checked = status[id];
     });
-    localStorage.setItem(storageKey, JSON.stringify(status));
   }
+}
 
-  // 체크박스 상태 불러오기
-  function loadStatus() {
-    const saved = localStorage.getItem(storageKey);
-    if (saved) {
-      const status = JSON.parse(saved);
-      days.forEach(day => {
-        const checkbox = document.getElementById(day);
-        checkbox.checked = status[day] || false;
-      });
-    }
-  }
+// 전체 초기화
+function resetAll() {
+  const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+  allCheckboxes.forEach(cb => cb.checked = false);
+  localStorage.removeItem("attendanceStatus");
+}
 
-  // 전체 초기화
-  function resetAll() {
-    days.forEach(day => {
-      const checkbox = document.getElementById(day);
-      checkbox.checked = false;
+// 체크리스트 테이블 생성
+function generateTable() {
+  const tbody = document.getElementById("checklist-body");
+  const maxLen = Math.max(
+    data.grade3.length,
+    data.grade2.length,
+    data.grade1.length
+  );
+
+  for (let i = 0; i < maxLen; i++) {
+    const tr = document.createElement("tr");
+
+    ["grade3", "grade2", "grade1"].forEach(grade => {
+      const [num, name] = data[grade][i] || ["", ""];
+      const idO = `${grade}_${num}_o`;
+      const idX = `${grade}_${num}_x`;
+
+      tr.innerHTML += `
+        <td>${num}</td>
+        <td>${name}</td>
+        <td>
+          <label><input type="checkbox" id="${idO}" onchange="saveStatus()"> O</label>
+          <label><input type="checkbox" id="${idX}" onchange="saveStatus()"> X</label>
+        </td>`;
     });
-    localStorage.removeItem(storageKey);
+
+    tbody.appendChild(tr);
   }
+}
 
-  // 체크박스 이벤트 연결
-  days.forEach(day => {
-    const checkbox = document.getElementById(day);
-    checkbox.addEventListener('change', saveStatus);
-  });
-
-  // 초기화 버튼 이벤트 연결
-  document.getElementById('resetBtn').addEventListener('click', () => {
-    resetAll();
-  });
-
-  // 페이지 로드 시 상태 복원
-  window.addEventListener('DOMContentLoaded', () => {
-    loadStatus();
-  });
+// 초기 실행
+generateTable();
+loadStatus();
 </script>
 
 </body>
