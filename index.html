@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인원 체크리스트</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .grade-section {
+            display: inline-block;
+            vertical-align: top;
+            width: 32%;
+            margin-right: 1%;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .grade-header {
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        
+        .attendance-table th {
+            background-color: #f8f9fa;
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            font-size: 14px;
+            border-right: 1px solid #ddd;
+        }
+        
+        .attendance-table th:last-child {
+            border-right: none;
+        }
+        
+        .attendance-table td {
+            padding: 6px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            border-right: 1px solid #eee;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+        
+        .attendance-table td:last-child {
+            border-right: none;
+        }
+        
+        .attendance-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .student-name {
+            text-align: left !important;
+            padding-left: 10px !important;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 30px;
+        }
+        
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin: 0;
+        }
+        
+        .number-col {
+            width: 15%;
+            min-width: 40px;
+        }
+        
+        .name-col {
+            width: 45%;
+            min-width: 80px;
+        }
+        
+        .check-col {
+            width: 20%;
+            min-width: 35px;
+        }
+        
+        /* O 컬럼 스타일 */
+        .o-col {
+            background-color: #f0f9ff;
+            border-left: 3px solid #22c55e;
+        }
+        
+        .o-header {
+            background-color: #22c55e;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* X 컬럼 스타일 */
+        .x-col {
+            background-color: #fef2f2;
+            border-left: 3px solid #ef4444;
+        }
+        
+        .x-header {
+            background-color: #ef4444;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .stats {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            background: #e8f4fd;
+            border-radius: 8px;
+        }
+        
+        .stats h3 {
+            margin: 0 0 10px 0;
+            color: #2c5282;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        
+        .stats-item {
+            margin: 5px;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .reset-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 12px 30px;
+            background: #e53e3e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .reset-btn:hover {
+            background: #c53030;
+        }
+        
+        @media (max-width: 768px) {
+            .grade-section {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .number-col {
+                width: 12%;
+            }
+            
+            .name-col {
+                width: 50%;
+            }
+            
+            .check-col {
+                width: 19%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 인원 체크리스트</h1>
+        
+        <div class="grade-section">
+            <div class="grade-header">3학년</div>
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th class="number-col">번호</th>
+                        <th class="name-col">이름</th>
+                        <th class="check-col o-header">체크 ✓</th>
+                        <th class="check-col x-header">선택안함 ✗</th>
+                    </tr>
+                </thead>
+                <tbody id="grade3">
+                    <tr><td>19</td><td class="student-name">신다현</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>2</td><td class="student-name">이예성</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>3</td><td class="student-name">양호정</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>4</td><td class="student-name">최 현</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>5</td><td class="student-name">양대용</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>6</td><td class="student-name">구윤우</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>7</td><td class="student-name">김민승</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>8</td><td class="student-name">김승현</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>10</td><td class="student-name">김예환</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>11</td><td class="student-name">양시원</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>12</td><td class="student-name">하종운</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>15</td><td class="student-name">신이환</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>16</td><td class="student-name">유 신</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>17</td><td class="student-name">박건우</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>18</td><td class="student-name">유시언</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                    <tr><td>66</td><td class="student-name">이준혁</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="3" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="3" data-type="x"></td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="grade-section">
+            <div class="grade-header">2학년</div>
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th class="number-col">번호</th>
+                        <th class="name-col">이름</th>
+                        <th class="check-col o-header">체크 ✓</th>
+                        <th class="check-col x-header">선택안함 ✗</th>
+                    </tr>
+                </thead>
+                <tbody id="grade2">
+                    <tr><td>20</td><td class="student-name">임창민</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>21</td><td class="student-name">정현빈</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>22</td><td class="student-name">조현준</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>23</td><td class="student-name">송하랑</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>24</td><td class="student-name">김은호</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>25</td><td class="student-name">고대원</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>26</td><td class="student-name">이승원</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>27</td><td class="student-name">정윤우</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>28</td><td class="student-name">김도율</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>29</td><td class="student-name"></td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>30</td><td class="student-name"></td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>31</td><td class="student-name">지현우</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>32</td><td class="student-name"></td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>33</td><td class="student-name"></td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>34</td><td class="student-name"></td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>35</td><td class="student-name"></td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>36</td><td class="student-name">최서준</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                    <tr><td>88</td><td class="student-name">이민준</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="2" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="2" data-type="x"></td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="grade-section">
+            <div class="grade-header">1학년</div>
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th class="number-col">번호</th>
+                        <th class="name-col">이름</th>
+                        <th class="check-col o-header">체크 ✓</th>
+                        <th class="check-col x-header">선택안함 ✗</th>
+                    </tr>
+                </thead>
+                <tbody id="grade1">
+                    <tr><td>37</td><td class="student-name">장라온</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>38</td><td class="student-name">손주호</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>39</td><td class="student-name">이주호</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>40</td><td class="student-name">문영민</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>41</td><td class="student-name">이선우</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>42</td><td class="student-name">박세일</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>45</td><td class="student-name">서호준</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>46</td><td class="student-name">백서현</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>47</td><td class="student-name">오태권</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>48</td><td class="student-name">이도율</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>49</td><td class="student-name">안 률</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>50</td><td class="student-name">백승준</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>51</td><td class="student-name">최승민</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>52</td><td class="student-name">이원준</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>53</td><td class="student-name">임준</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>55</td><td class="student-name">김재현</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>56</td><td class="student-name">허준혁</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>57</td><td class="student-name">홍선태</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                    <tr><td>59</td><td class="student-name">이영재</td><td class="checkbox-container o-col"><input type="checkbox" data-grade="1" data-type="o"></td><td class="checkbox-container x-col"><input type="checkbox" data-grade="1" data-type="x"></td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="stats">
+            <h3>📊 인원 현황</h3>
+            <div class="stats-row">
+                <div class="stats-item">
+                    <strong>3학년 체크:</strong> <span id="grade3-present">0</span>명 / 
+                    <strong>선택안함:</strong> <span id="grade3-absent">0</span>명
+                </div>
+                <div class="stats-item">
+                    <strong>2학년 체크:</strong> <span id="grade2-present">0</span>명 / 
+                    <strong>선택안함:</strong> <span id="grade2-absent">0</span>명
+                </div>
+                <div class="stats-item">
+                    <strong>1학년 체크:</strong> <span id="grade1-present">0</span>명 / 
+                    <strong>선택안함:</strong> <span id="grade1-absent">0</span>명
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stats-item">
+                    <strong>전체 체크:</strong> <span id="total-present">0</span>명 / 
+                    <strong>전체 미선택:</strong> <span id="total-absent">0</span>명 / 
+                    <strong>총 인원:</strong> <span id="total-students">53</span>명
+                </div>
+            </div>
+        </div>
+        
+        <button class="reset-btn" onclick="resetAll()">🔄 전체 초기화</button>
+    </div>
+
+    <script>
+        // 체크박스 상호 배타적 선택 및 통계 업데이트
+        document.addEventListener('change', function(e) {
+            if (e.target.type === 'checkbox') {
+                const row = e.target.closest('tr');
+                const checkboxes = row.querySelectorAll('input[type="checkbox"]');
+                
+                // 체크된 경우에만 다른 체크박스 해제
+                if (e.target.checked) {
+                    checkboxes.forEach(cb => {
+                        if (cb !== e.target) {
+                            cb.checked = false;
+                        }
+                    });
+                }
+                
+                updateStats();
+            }
+        });
+        
+        function updateStats() {
+            const grades = ['1', '2', '3'];
+            let totalPresent = 0;
+            let totalAbsent = 0;
+            
+            grades.forEach(grade => {
+                const presentCount = document.querySelectorAll(`input[data-grade="${grade}"][data-type="o"]:checked`).length;
+                const absentCount = document.querySelectorAll(`input[data-grade="${grade}"][data-type="x"]:checked`).length;
+                
+                document.getElementById(`grade${grade}-present`).textContent = presentCount;
+                document.getElementById(`grade${grade}-absent`).textContent = absentCount;
+                
+                totalPresent += presentCount;
+                totalAbsent += absentCount;
+            });
+            
+            document.getElementById('total-present').textContent = totalPresent;
+            document.getElementById('total-absent').textContent = totalAbsent;
+        }
+        
+        function resetAll() {
+            if (confirm('모든 체크를 초기화하시겠습니까?')) {
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = false);
+                updateStats();
+            }
+        }
+        
+        // 초기 통계 설정
+        updateStats();
+    </script>
+</body>
+</html>
